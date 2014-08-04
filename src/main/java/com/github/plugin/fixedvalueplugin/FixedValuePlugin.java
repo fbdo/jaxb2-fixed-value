@@ -34,7 +34,7 @@ import com.sun.xml.xsom.XSParticle;
 import com.sun.xml.xsom.XSTerm;
 
 /**
- * Modifies the JAXB code model to set default values to the schema "default" attribute.
+ * Modifies the JAXB code model to set default values to the schema "fixed" attribute.
  * Currently, the following field types can be initialized:
  * <ul>
  * <li>Enumerations (see {@link Enum})</li>
@@ -52,34 +52,28 @@ import com.sun.xml.xsom.XSTerm;
  * <li>{@link Boolean}</li>
  * </ul>
  *
- * Created: Mon Apr 24 22:04:25 2006
- *
- * @author <a href="mailto:hari@dcis.net">Hari Selvarajan</a>
- * @author <a href="mailto:Juergen.Lukasczyk at web.de">Jürgen Lukasczyk</a>
- * @version 1.1
+ * @author <a href="mailto:fabio.braga@gmail.com">Fabio Oliveira</a>
+ * @version 1.0
  */
 public class FixedValuePlugin
-        extends Plugin
-{
+        extends Plugin {
 
     /**
      * Name of Option to enable this plugin
      */
-    static private final String OPTION_NAME = "Xdefault-value";
+    static private final String OPTION_NAME = "Xfixed-value";
 
 
     /**
-     * Creates a new <code>DefaultValuePlugin</code> instance.
-     *
+     * Creates a new <code>FixedValuePlugin</code> instance.
      */
     public FixedValuePlugin() {
     }
 
 
     /**
-     * DefaultValuePlugin uses "-Xdefault-value" as the command-line
+     * FixedValuePlugin uses "-Xfixed-value" as the command-line
      * argument
-     *
      */
     public String getOptionName() {
         return OPTION_NAME;
@@ -88,37 +82,33 @@ public class FixedValuePlugin
 
     /**
      * Return usage information for plugin
-     *
      */
-    public String getUsage()
-    {
-        return "  -"+OPTION_NAME+"    : enable rewriting of classes to set default values for fields as specified in XML schema";
+    public String getUsage() {
+        return "  -" + OPTION_NAME + "    : enable rewriting of classes to set default values for fields as specified in XML schema";
     }
 
     /**
      * Run the plugin. We perform the following steps:
-     *
+     * <p/>
      * <ul>
      * <li>Look for fields that:
      * <ul>
      * <li>Were generated from XSD description</li>
-     * <li>The XSD description is of type xsd:element (code level default values
-     *  are not necessary for fields generated from attributes)</li>
-     * <li>A default value is specified</li>
+     * <li>The XSD description is of type xsd:element (code level fixed values
+     * are not necessary for fields generated from attributes)</li>
+     * <li>A fixed value is specified</li>
      * <li>Map to one of the supported types</li>
      * </ul>
      * </li>
-     * <li>Add a new initializsation expression to every field found</li>
+     * <li>Add a new initialization expression to every field found</li>
      * </ul>
-     *
      */
-    public boolean run(Outline outline, Options opt, ErrorHandler errorHandler)
-    {
+    public boolean run(Outline outline, Options opt, ErrorHandler errorHandler) {
         // For all Classes generated
         for (ClassOutline co : outline.getClasses()) {
 
             // Some conversions may have to add class level code
-            JFieldVar dtf = null;		// Helper code: DatatypeFactory
+            JFieldVar dtf = null;        // Helper code: DatatypeFactory
 
             // check all Fields in Class
             for (FieldOutline f : co.getDeclaredFields()) {
@@ -157,19 +147,15 @@ public class FixedValuePlugin
                     var.init(JExpr.lit(defaultValue));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing String variable "
-                                +fieldInfo.displayName()
-                                +" to \""+defaultValue+"\"");
-                }
-
-                else if ("java.lang.Boolean".equals(typeFullName)) {
+                                + fieldInfo.displayName()
+                                + " to \"" + defaultValue + "\"");
+                } else if ("java.lang.Boolean".equals(typeFullName)) {
                     var.init(JExpr.lit(Boolean.valueOf(defaultValue)));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing Boolean variable "
-                                +fieldInfo.displayName()
-                                +" to "+defaultValue+"");
-                }
-
-                else if ( ("java.lang.Byte".equals(typeFullName))
+                                + fieldInfo.displayName()
+                                + " to " + defaultValue + "");
+                } else if (("java.lang.Byte".equals(typeFullName))
                         || ("java.lang.Short".equals(typeFullName))
                         || ("java.lang.Integer".equals(typeFullName))
                         ) {
@@ -177,55 +163,45 @@ public class FixedValuePlugin
                     var.init(JExpr.lit(Integer.valueOf(defaultValue)));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing Integer variable "
-                                +fieldInfo.displayName()
-                                +" to "+defaultValue+"");
-                }
-
-                else if ("java.lang.Long".equals(typeFullName)) {
+                                + fieldInfo.displayName()
+                                + " to " + defaultValue + "");
+                } else if ("java.lang.Long".equals(typeFullName)) {
                     var.init(JExpr.lit(Long.valueOf(defaultValue)));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing Long variable "
-                                +fieldInfo.displayName()
-                                +" to "+defaultValue+"");
-                }
-
-                else if ("java.lang.Float".equals(typeFullName)) {
+                                + fieldInfo.displayName()
+                                + " to " + defaultValue + "");
+                } else if ("java.lang.Float".equals(typeFullName)) {
                     var.init(JExpr.lit(Float.valueOf(defaultValue)));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing Float variable "
-                                +fieldInfo.displayName()
-                                +" to "+defaultValue+"");
-                }
-
-                else if ( ("java.lang.Single".equals(typeFullName))
+                                + fieldInfo.displayName()
+                                + " to " + defaultValue + "");
+                } else if (("java.lang.Single".equals(typeFullName))
                         || ("java.lang.Double".equals(typeFullName))
                         ) {
                     // CodeModel does not distinguish between Single and Double literals
                     var.init(JExpr.lit(Double.valueOf(defaultValue)));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing Double variable "
-                                +fieldInfo.displayName()
-                                +" to "+defaultValue+"");
-                }
-
-                else if ("javax.xml.datatype.XMLGregorianCalendar".equals(typeFullName)) {
+                                + fieldInfo.displayName()
+                                + " to " + defaultValue + "");
+                } else if ("javax.xml.datatype.XMLGregorianCalendar".equals(typeFullName)) {
                     // XMLGregorianCalender is constructed by DatatypeFactory, so we have to have
                     // an instance of that once per class
                     if (dtf == null) {
                         dtf = installDtF(co.implClass);
-                        if (dtf == null)  continue;
+                        if (dtf == null) continue;
                     }
                     // Use our DtF instance to generate the initialization expression
                     var.init(JExpr.invoke(dtf, "newXMLGregorianCalendar")
                             .arg(defaultValue));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing XMLGregorianCalendar variable "
-                                +fieldInfo.displayName()
-                                +" with value of "+defaultValue);
-                }
-
-                else if ( (type instanceof JDefinedClass)
-                        && (((JDefinedClass) type).getClassType() == ClassType.ENUM) ) {
+                                + fieldInfo.displayName()
+                                + " with value of " + defaultValue);
+                } else if ((type instanceof JDefinedClass)
+                        && (((JDefinedClass) type).getClassType() == ClassType.ENUM)) {
                     // Find Enum constant
                     JEnumConstant constant = findEnumConstant(type, defaultValue, outline);
                     if (constant != null) {
@@ -242,7 +218,7 @@ public class FixedValuePlugin
                                     + fieldInfo.displayName()
                                     + ". Don't know how to create default value expression for fields of type "
                                     + typeFullName
-                                    + ". Default value of \""+defaultValue+"\" specified in schema"
+                                    + ". Default value of \"" + defaultValue + "\" specified in schema"
                     );
                 }
 
@@ -256,13 +232,13 @@ public class FixedValuePlugin
 
     /**
      * Retrieve the enum constant that correlates to the string value.
-     * @param enumType	Type identifying an Enum in the code model
-     * @param enumStringValue	Lexical value of the constant to search
-     * @param outline	Outline of the code model
+     *
+     * @param enumType        Type identifying an Enum in the code model
+     * @param enumStringValue Lexical value of the constant to search
+     * @param outline         Outline of the code model
      * @return The matching Constant from the enum type or NULL if not found
      */
-    private JEnumConstant findEnumConstant(JType enumType, String enumStringValue, Outline outline)
-    {
+    private JEnumConstant findEnumConstant(JType enumType, String enumStringValue, Outline outline) {
         // Search all Enums generated
         for (EnumOutline eo : outline.getEnums()) {
             // Is it the type of my variable?
@@ -275,12 +251,12 @@ public class FixedValuePlugin
                     }
                 }  // for Constants
                 // Did not find the constant???
-                System.out.println("[WARN] Could not find EnumConstant for value: "+enumStringValue);
+                System.out.println("[WARN] Could not find EnumConstant for value: " + enumStringValue);
                 return null;
             }
         }
         // Did not find the type??
-        System.out.println("[WARN] Could not find Enum class for type: "+enumType.fullName());
+        System.out.println("[WARN] Could not find Enum class for type: " + enumType.fullName());
         return null;
     }
 
@@ -288,11 +264,11 @@ public class FixedValuePlugin
     /**
      * Enhance the CodeModel of a Class to include a {@link DatatypeFactory} as a static private field.
      * The factory is needed to construct {@link XMLGregorianCalendar} from String representation.
-     * @param parentClass	Class where the DatatypeFactory will be created
-     * @return	Reference to the created static field
+     *
+     * @param parentClass Class where the DatatypeFactory will be created
+     * @return Reference to the created static field
      */
-    private JFieldVar installDtF(final JDefinedClass parentClass)
-    {
+    private JFieldVar installDtF(final JDefinedClass parentClass) {
         try {
             JCodeModel cm = parentClass.owner();
             // Create a static variable of type DatatypeFactory
