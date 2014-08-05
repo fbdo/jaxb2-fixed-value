@@ -127,10 +127,10 @@ public class FixedValuePlugin
                 XSElementDecl element = term.asElementDecl();
 
                 // Do nothing if no default value
-                if (element.getDefaultValue() == null) {
+                if (element.getFixedValue() == null) {
                     continue;
                 }
-                String defaultValue = element.getDefaultValue().value;
+                String fixedValue = element.getFixedValue().value;
 
                 // Get handle to JModel representing the field
                 Map<String, JFieldVar> fields = (Map<String, JFieldVar>) co.implClass.fields();
@@ -142,50 +142,50 @@ public class FixedValuePlugin
                     type = type.boxify();
                 String typeFullName = type.fullName();
 
-                // Create an appropriate default expression depending on type
+                // Create an appropriate fixed expression depending on type
                 if ("java.lang.String".equals(typeFullName)) {
-                    var.init(JExpr.lit(defaultValue));
+                    var.init(JExpr.lit(fixedValue));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing String variable "
                                 + fieldInfo.displayName()
-                                + " to \"" + defaultValue + "\"");
+                                + " to \"" + fixedValue + "\"");
                 } else if ("java.lang.Boolean".equals(typeFullName)) {
-                    var.init(JExpr.lit(Boolean.valueOf(defaultValue)));
+                    var.init(JExpr.lit(Boolean.valueOf(fixedValue)));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing Boolean variable "
                                 + fieldInfo.displayName()
-                                + " to " + defaultValue + "");
+                                + " to " + fixedValue + "");
                 } else if (("java.lang.Byte".equals(typeFullName))
                         || ("java.lang.Short".equals(typeFullName))
                         || ("java.lang.Integer".equals(typeFullName))
                         ) {
                     // CodeModel does not distinguish between Byte, Short and Integer literals
-                    var.init(JExpr.lit(Integer.valueOf(defaultValue)));
+                    var.init(JExpr.lit(Integer.valueOf(fixedValue)));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing Integer variable "
                                 + fieldInfo.displayName()
-                                + " to " + defaultValue + "");
+                                + " to " + fixedValue + "");
                 } else if ("java.lang.Long".equals(typeFullName)) {
-                    var.init(JExpr.lit(Long.valueOf(defaultValue)));
+                    var.init(JExpr.lit(Long.valueOf(fixedValue)));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing Long variable "
                                 + fieldInfo.displayName()
-                                + " to " + defaultValue + "");
+                                + " to " + fixedValue + "");
                 } else if ("java.lang.Float".equals(typeFullName)) {
-                    var.init(JExpr.lit(Float.valueOf(defaultValue)));
+                    var.init(JExpr.lit(Float.valueOf(fixedValue)));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing Float variable "
                                 + fieldInfo.displayName()
-                                + " to " + defaultValue + "");
+                                + " to " + fixedValue + "");
                 } else if (("java.lang.Single".equals(typeFullName))
                         || ("java.lang.Double".equals(typeFullName))
                         ) {
                     // CodeModel does not distinguish between Single and Double literals
-                    var.init(JExpr.lit(Double.valueOf(defaultValue)));
+                    var.init(JExpr.lit(Double.valueOf(fixedValue)));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing Double variable "
                                 + fieldInfo.displayName()
-                                + " to " + defaultValue + "");
+                                + " to " + fixedValue + "");
                 } else if ("javax.xml.datatype.XMLGregorianCalendar".equals(typeFullName)) {
                     // XMLGregorianCalender is constructed by DatatypeFactory, so we have to have
                     // an instance of that once per class
@@ -195,15 +195,15 @@ public class FixedValuePlugin
                     }
                     // Use our DtF instance to generate the initialization expression
                     var.init(JExpr.invoke(dtf, "newXMLGregorianCalendar")
-                            .arg(defaultValue));
+                            .arg(fixedValue));
                     if (opt.verbose)
                         System.out.println("[INFO] Initializing XMLGregorianCalendar variable "
                                 + fieldInfo.displayName()
-                                + " with value of " + defaultValue);
+                                + " with value of " + fixedValue);
                 } else if ((type instanceof JDefinedClass)
                         && (((JDefinedClass) type).getClassType() == ClassType.ENUM)) {
                     // Find Enum constant
-                    JEnumConstant constant = findEnumConstant(type, defaultValue, outline);
+                    JEnumConstant constant = findEnumConstant(type, fixedValue, outline);
                     if (constant != null) {
                         var.init(constant);
                         if (opt.verbose)
@@ -218,7 +218,7 @@ public class FixedValuePlugin
                                     + fieldInfo.displayName()
                                     + ". Don't know how to create default value expression for fields of type "
                                     + typeFullName
-                                    + ". Default value of \"" + defaultValue + "\" specified in schema"
+                                    + ". Default value of \"" + fixedValue + "\" specified in schema"
                     );
                 }
 
