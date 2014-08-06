@@ -30,6 +30,12 @@
         </developer>
     </developers>
 
+    <scm>
+        <connection>scm:git:git@github.com:fbdo/jaxb2-fixed-value.git</connection>
+        <url>scm:git:git@github.com:fbdo/jaxb2-fixed-value.git</url>
+        <developerConnection>scm:git:git@github.com:fbdo/jaxb2-fixed-value.git</developerConnection>
+    </scm>
+
     <distributionManagement>
         <repository>
             <id>internal.repo</id>
