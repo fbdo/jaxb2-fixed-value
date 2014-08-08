@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.fbdo</groupId>
     <artifactId>jaxb2-fixed-value</artifactId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>JAXB2 - Fixed Value Plugin</name>
@@ -36,8 +37,8 @@
         <connection>scm:git:git@github.com:fbdo/jaxb2-fixed-value.git</connection>
         <url>git@github.com:fbdo/jaxb2-fixed-value.git</url>
         <developerConnection>scm:git:git@github.com:fbdo/jaxb2-fixed-value.git</developerConnection>
-      <tag>jaxb2-fixed-value-1.1</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <distributionManagement>
         <repository>
