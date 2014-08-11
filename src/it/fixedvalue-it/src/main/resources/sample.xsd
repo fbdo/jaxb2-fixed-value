@@ -1,17 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xs:element name="notice" type="notice"/>
-    <xs:complexType name="notice">
-        <xs:simpleContent>
-            <xs:extension base="CONTENT">
-                <xs:attribute name="test" use="required" fixed="en"/>
-            </xs:extension>
-        </xs:simpleContent>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified"
+           elementFormDefault="qualified">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xs:element name="product" type="Product"/>
+
+    <xs:complexType name="Product">
+        <xs:sequence>
+            <xs:element name="price" type="Money"/>
+            <xs:element name="unit" type="UnitOfMeasurement"/>
+            <xs:element name="group" type="ProductGroup"/>
+        </xs:sequence>
     </xs:complexType>
-    <xs:simpleType name="CONTENT">
+
+    <xs:complexType name="Book">
+        <xs:complexContent>
+            <xs:extension base="Product">
+                <xs:sequence>
+                    <xs:element name="unit" type="UnitOfMeasurement" fixed="unit" />
+                    <xs:element name="isbn" type="xs:string" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:simpleType name="Money">
+        <xs:restriction base="xs:decimal">
+            <xs:fractionDigits value="2"/>
+            <xs:pattern value="[0-9]{1,}\.[0-9]{2}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="UnitOfMeasurement">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="Banana banana banana"/>
+            <xs:enumeration value="kg"/>
+            <xs:enumeration value="m"/>
+            <xs:enumeration value="unit"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ProductGroup">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Books"/>
+            <xs:enumeration value="Toys"/>
+            <xs:enumeration value="Electronics"/>
+            <xs:enumeration value="Computers"/>
+            <xs:enumeration value="Clothes"/>
+            <xs:enumeration value="Sports"/>
+            <xs:enumeration value="Grocery"/>
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>

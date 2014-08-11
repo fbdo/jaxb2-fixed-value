@@ -1,31 +1,22 @@
-jaxb2-fixed-value
+JAXB 2 Fixed Value Plugin
 =================
 
-This is an XJC plugin to set fixed values in the XJC generated classes based on the fixed attribute to <xs:element>. The fixed attribute is documented [here](http://www.w3.org/TR/xmlschema-0/#OccurrenceConstraints). Note that JAXB handles fixed values for <xs:attribute> natively, so this plugin is not necessary for an attribute fixed.
+# Introduction
+
+This plugin is highly inspired by the [JAXB 2 Default Value Plugin](https://java.net/projects/jaxb2-commons/pages/Default-Value), and share a lot of common code. This is an XJC plugin to set fixed values in the XJC generated classes based on the fixed attribute to <xs:element>. The fixed attribute is documented [here](http://www.w3.org/TR/xmlschema-0/#OccurrenceConstraints). Note that JAXB handles fixed values for <xs:attribute> natively, so this plugin is not necessary for an attribute fixed.
 
 
-The plugin is particularly useful while generating Value Objects for a user interface from an XML schema. User interface tags such as the Struts HTML tags use reflection on bean properties to render themselves, so it is often useful to have a set of sensible defaults set in the Java Beans mapping to the user interface themselves.
+The plugin is particularly useful while generating Value Objects for a user interface from an XML schema. User interface tags such as the Struts HTML tags use reflection on bean properties to render themselves, so it is often useful to have a set of sensible fixed values set in the Java Beans mapping to the user interface themselves.
 
-The XML schema below describes a person and their address. It also uses a boolean flag to indicate whether the user's mailing address is different from their residential address. Since a person's mailing address is typically the same as their residential address, it would be nice to default the boolean to true. The XML schema "default" attribute is used to achieve this.
+The XML schema below describes a generic product and some subclasses, like books, clothes and groceries. It also uses a string to indicate the product group, and it's unit type. Since we already know the product classification and unit type for the subclasses, it will great to enforce the correct value. The XML schema "fixed" attribute is used to achieve this.
 
+```xml
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-        <xs:element name="Person">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="firstName" type="xs:string"/>
-              <xs:element name="middleName" type="xs:string"/>
-              <xs:element name="lastName" type="xs:string"/>
-              
-              <xs:element name="residentialAddress" type="Address" minOccurs="1" maxOccurs="1"/>
-              <xs:element name="mailingAddressIdentical" type="xs:boolean" default="true"/>
-              <xs:element name="mailingAddress" type="Address" minOccurs="0" maxOccurs="1"/>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
+        <xs:element name="product" type="Product" />
         
-        <xs:complexType name="Address">
+        <xs:complexType name="Product">
           <xs:sequence>
-            <xs:element name="careOf" type="xs:string"/>
+            <xs:element name="price" type="xs:string"/>
             <xs:element name="street" type="xs:string"/>
             <xs:element name="apt" type="xs:string"/>
             <xs:element name="city" type="xs:string"/>
@@ -33,9 +24,14 @@ The XML schema below describes a person and their address. It also uses a boolea
             <xs:element name="ZIP" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
+        
+        
+        
         </xs:schema>
+```
 
 The XJC generated code for the schema (comments removed for brevity):
+
 
 ```java
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -112,6 +108,13 @@ The XJC generated code for the schema (comments removed for brevity):
     
     }
 ```
+
+# Usage
+
+For information about how to use XJC plugins in general, see [here](http://weblogs.java.net/blog/kohsuke/archive/2005/06/writing_a_plugi.html).
+
+
+
 
 Recently on BuildHive
 -----------------------------
