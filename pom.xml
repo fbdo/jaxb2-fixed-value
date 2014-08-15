@@ -3,7 +3,7 @@
 
     <groupId>com.github.fbdo</groupId>
     <artifactId>jaxb2-fixed-value</artifactId>
-    <version>1.2</version>
+    <version>1.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>JAXB2 - Fixed Value Plugin</name>
@@ -36,7 +36,7 @@
         <connection>scm:git:git@github.com:fbdo/jaxb2-fixed-value.git</connection>
         <url>git@github.com:fbdo/jaxb2-fixed-value.git</url>
         <developerConnection>scm:git:git@github.com:fbdo/jaxb2-fixed-value.git</developerConnection>
-        <tag>jaxb2-fixed-value-1.2</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
