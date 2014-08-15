@@ -2,35 +2,51 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified"
            elementFormDefault="qualified">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xs:element name="product" type="Product"/>
 
     <xs:element name="products">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="Product" maxOccurs="unbounded" />
+                <xs:element name="product" type="Product" maxOccurs="unbounded" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="Product" type="ProductType" />
-
-    <xs:complexType name="ProductType" abstract="true">
+    <xs:complexType name="Product" abstract="true">
         <xs:sequence>
-            <xs:element ref="price"/>
-            <xs:element ref="unit"/>
-            <xs:element ref="group"/>
+            <xs:element name="price" type="Money"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:element name="price" type="Money"/>
-    <xs:element name="unit" type="UnitOfMeasurement"/>
-    <xs:element name="group" type="ProductGroup"/>
-
     <xs:complexType name="Book">
         <xs:complexContent>
-            <xs:extension base="ProductType">
+            <xs:extension base="Product">
                 <xs:sequence>
-                    <xs:element ref="unit" />
+                    <xs:element name="unit" type="UnitOfMeasurement" fixed="unit" />
+                    <xs:element name="group" type="ProductGroup" fixed="Books"/>
                     <xs:element name="isbn" type="xs:string" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="Banana">
+        <xs:complexContent>
+            <xs:extension base="Product">
+                <xs:sequence>
+                    <xs:element name="unit" type="UnitOfMeasurement" fixed="kg" />
+                    <xs:element name="group" type="ProductGroup" fixed="Grocery"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="EthernetCable">
+        <xs:complexContent>
+            <xs:extension base="Product">
+                <xs:sequence>
+                    <xs:element name="unit" type="UnitOfMeasurement" fixed="m" />
+                    <xs:element name="group" type="ProductGroup" fixed="Computers"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -47,7 +63,7 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="kg"/>
             <xs:enumeration value="m"/>
-            <xs:enumeration value="piece"/>
+            <xs:enumeration value="unit"/>
         </xs:restriction>
     </xs:simpleType>
 

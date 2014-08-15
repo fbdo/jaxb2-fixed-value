@@ -1,4 +1,4 @@
-JAXB 2 Fixed Value Plugin
+JAXB 2 Fixed Value Plugin [![Build Status](https://buildhive.cloudbees.com/job/fbdo/job/jaxb2-fixed-value/badge/icon)](https://buildhive.cloudbees.com/job/fbdo/job/jaxb2-fixed-value/)
 =================
 
 # Introduction
@@ -14,19 +14,24 @@ The XML schema below describes a generic product and some subclasses, like books
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
         <xs:element name="product" type="Product" />
         
-        <xs:complexType name="Product">
-          <xs:sequence>
-            <xs:element name="price" type="xs:string"/>
-            <xs:element name="street" type="xs:string"/>
-            <xs:element name="apt" type="xs:string"/>
-            <xs:element name="city" type="xs:string"/>
-            <xs:element name="state" type="xs:string"/>
-            <xs:element name="ZIP" type="xs:string"/>
-          </xs:sequence>
+        <xs:complexType name="Product" abstract="true">
+            <xs:sequence>
+                <xs:element name="price" type="Money"/>
+            </xs:sequence>
         </xs:complexType>
         
-        
-        
+        <xs:complexType name="Book">
+            <xs:complexContent>
+                <xs:extension base="Product">
+                    <xs:sequence>
+                        <xs:element name="unit" type="UnitOfMeasurement" fixed="unit" />
+                        <xs:element name="group" type="ProductGroup" fixed="Books"/>
+                        <xs:element name="isbn" type="xs:string" />
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+                
         </xs:schema>
 ```
 
@@ -35,87 +40,193 @@ The XJC generated code for the schema (comments removed for brevity):
 
 ```java
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "firstName",
-        "middleName",
-        "lastName",
-        "residentialAddress",
-        "mailingAddressIdentical",
-        "mailingAddress"
+    @XmlType(name = "Book", propOrder = {
+        "unit",
+        "group",
+        "isbn"
     })
-    @XmlRootElement(name = "Person")
-    public class Person {
+    public class Book
+        extends Product
+    {
     
         @XmlElement(required = true)
-        protected String firstName;
+        protected UnitOfMeasurement unit;
         @XmlElement(required = true)
-        protected String middleName;
+        protected ProductGroup group;
         @XmlElement(required = true)
-        protected String lastName;
-        @XmlElement(required = true)
-        protected Address residentialAddress;
-        @XmlElement(defaultValue = "true")
-        protected boolean mailingAddressIdentical;
-        protected Address mailingAddress;
+        protected String isbn;
     
-        public String getFirstName() {
-            return firstName;
+        /**
+         * Gets the value of the unit property.
+         * 
+         * @return
+         *     possible object is
+         *     {@link UnitOfMeasurement }
+         *     
+         */
+        public UnitOfMeasurement getUnit() {
+            return unit;
         }
     
-        public void setFirstName(String value) {
-            this.firstName = value;
+        /**
+         * Sets the value of the unit property.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link UnitOfMeasurement }
+         *     
+         */
+        public void setUnit(UnitOfMeasurement value) {
+            this.unit = value;
         }
     
-        public String getMiddleName() {
-            return middleName;
+        /**
+         * Gets the value of the group property.
+         * 
+         * @return
+         *     possible object is
+         *     {@link ProductGroup }
+         *     
+         */
+        public ProductGroup getGroup() {
+            return group;
         }
     
-        public void setMiddleName(String value) {
-            this.middleName = value;
+        /**
+         * Sets the value of the group property.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link ProductGroup }
+         *     
+         */
+        public void setGroup(ProductGroup value) {
+            this.group = value;
         }
     
-        public String getLastName() {
-            return lastName;
+        /**
+         * Gets the value of the isbn property.
+         * 
+         * @return
+         *     possible object is
+         *     {@link String }
+         *     
+         */
+        public String getIsbn() {
+            return isbn;
         }
     
-        public void setLastName(String value) {
-            this.lastName = value;
-        }
-    
-        public Address getResidentialAddress() {
-            return residentialAddress;
-        }
-    
-        public void setResidentialAddress(Address value) {
-            this.residentialAddress = value;
-        }
-    
-        public boolean isMailingAddressIdentical() {
-            return mailingAddressIdentical;
-        }
-    
-        public void setMailingAddressIdentical(boolean value) {
-            this.mailingAddressIdentical = value;
-        }
-    
-        public Address getMailingAddress() {
-            return mailingAddress;
-        }
-    
-        public void setMailingAddress(Address value) {
-            this.mailingAddress = value;
+        /**
+         * Sets the value of the isbn property.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *     
+         */
+        public void setIsbn(String value) {
+            this.isbn = value;
         }
     
     }
+```
+
+Note that the group property's does not map to the variable declaration - which, being a ProductGroup, defaults to null. Wouldn't it be nice to have the declaration reflect this as well? Enter the fixed value plugin. Here's the declaration section of Book.java with the fixed value plugin enabled:
+
+```java
+    @XmlElement(required = true)
+    protected UnitOfMeasurement unit = UnitOfMeasurement.UNIT;
+    @XmlElement(required = true)
+    protected ProductGroup group = ProductGroup.BOOKS;
+    @XmlElement(required = true)
+    protected String isbn;
 ```
 
 # Usage
 
 For information about how to use XJC plugins in general, see [here](http://weblogs.java.net/blog/kohsuke/archive/2005/06/writing_a_plugi.html).
 
+This is a sample build.xml that shows how the plugin is used. It's used to build the sample classes in the samples/ directory:
 
+```xml
+    <?xml version="1.0" ?>
+    
+    <project name="samples" default="compile" basedir=".">
+      <description>Builds the default value plugin sample</description>
+    
+      <property file="../build.properties"/>
+    
+      <!-- Remove an earlier build by deleting the "build" directory -->
+      <target name="clean">
+        <delete dir="gen-src"/>
+      </target>
+    
+      <!-- Compile classes generated by XJC compiler -->
+      <target name="compile" depends="gen-src">
+        <javac compiler="javac1.5" srcdir="gen-src/generated" includes="*.java">
+          <classpath>
+    	<fileset dir="${jaxb.lib.dir}" includes="*.jar"/>
+          </classpath>
+        </javac>
+      </target>
+    
+      <!-- Use XJC task to compile schema to Java code -->
+      <target name="gen-src">
+        <mkdir dir="gen-src"/>
+        <xjc removeOldOutput="yes" schema="sample.xsd" target="gen-src">
+          <arg value="-extension"/>
+          <arg value="-Xfixed-value"/>
+        </xjc>
+      </target>
+      
+      <!-- Defines XJC task -->
+      <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+        <classpath>
+          <fileset dir="${jaxb.lib.dir}" includes="*.jar"/>
+          <pathelement location="../build/jaxb2-fixed-value-1.2.jar"/>
+        </classpath>
+      </taskdef>
+    
+    </project>
+```
 
+A sample for using this plugin with Maven can be found on the source code (see this [pom.xml](https://github.com/fbdo/jaxb2-fixed-value/blob/master/src/it/fixedvalue-it/pom.xml)). Here a small snippet:
 
-Recently on BuildHive
------------------------------
-[![Build Status](https://buildhive.cloudbees.com/job/fbdo/job/jaxb2-fixed-value/badge/icon)](https://buildhive.cloudbees.com/job/fbdo/job/jaxb2-fixed-value/)
+```xml
+    <build>
+          <plugins>
+              <plugin>
+                  <groupId>org.jvnet.jaxb2.maven2</groupId>
+                  <artifactId>maven-jaxb2-plugin</artifactId>
+                  <executions>
+                      <execution>
+                          <goals>
+                              <goal>generate</goal>
+                          </goals>
+                      </execution>
+                  </executions>
+                  <configuration>
+                      <args>
+                          <arg>-Xfixed-value</arg>
+                      </args>
+                      <plugins>
+                          <plugin>
+                              <groupId>com.github.fbdo</groupId>
+                              <artifactId>jaxb2-fixed-value</artifactId>
+                              <version>1.2</version>
+                          </plugin>
+                      </plugins>
+                  </configuration>
+              </plugin>
+              <plugin>
+                  <inherited>true</inherited>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-compiler-plugin</artifactId>
+                  <configuration>
+                      <source>1.5</source>
+                      <target>1.5</target>
+                  </configuration>
+              </plugin>
+          </plugins>
+    </build>
+```
