@@ -33,7 +33,7 @@
                       <plugin>
                           <groupId>com.github.fbdo</groupId>
                           <artifactId>jaxb2-fixed-value</artifactId>
-                          <version>1.2-SNAPSHOT</version>
+                          <version>@project.version@</version>
                       </plugin>
                   </plugins>
               </configuration>
