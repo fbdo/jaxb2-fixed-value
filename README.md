@@ -56,74 +56,26 @@ The XJC generated code for the schema (comments removed for brevity):
         @XmlElement(required = true)
         protected String isbn;
     
-        /**
-         * Gets the value of the unit property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link UnitOfMeasurement }
-         *     
-         */
         public UnitOfMeasurement getUnit() {
             return unit;
         }
     
-        /**
-         * Sets the value of the unit property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link UnitOfMeasurement }
-         *     
-         */
         public void setUnit(UnitOfMeasurement value) {
             this.unit = value;
         }
     
-        /**
-         * Gets the value of the group property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link ProductGroup }
-         *     
-         */
         public ProductGroup getGroup() {
             return group;
         }
     
-        /**
-         * Sets the value of the group property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link ProductGroup }
-         *     
-         */
         public void setGroup(ProductGroup value) {
             this.group = value;
         }
     
-        /**
-         * Gets the value of the isbn property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
         public String getIsbn() {
             return isbn;
         }
     
-        /**
-         * Sets the value of the isbn property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
         public void setIsbn(String value) {
             this.isbn = value;
         }
