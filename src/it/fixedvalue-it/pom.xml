@@ -29,6 +29,7 @@
                   <args>
                       <arg>-Xfixed-value</arg>
                   </args>
+                  <bindingDirectory>src/main/resources</bindingDirectory>
                   <plugins>
                       <plugin>
                           <groupId>com.github.fbdo</groupId>

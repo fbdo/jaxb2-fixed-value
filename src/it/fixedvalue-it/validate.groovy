@@ -4,8 +4,8 @@ try {
     assert file.exists()
 
     def lines = file.readLines()
-    assert 'protected UnitOfMeasurement unit = UnitOfMeasurement.UNIT;' == lines[48].trim()
-    assert 'protected ProductGroup group = ProductGroup.BOOKS;' == lines[50].trim()
+    assert 'protected UnitOfMeasurement unit = UnitOfMeasurement.UNIT;' == lines[50].trim()
+    assert 'protected ProductGroup group = ProductGroup.BOOKS;' == lines[53].trim()
 
     def file2 = new File(basedir, 'target/generated-sources/xjc/generated/Banana.java')
     assert file2.exists()

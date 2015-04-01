@@ -13,9 +13,8 @@
     </xs:element>
 
     <xs:complexType name="Product" abstract="true">
-        <xs:sequence>
-            <xs:element name="price" type="Money"/>
-        </xs:sequence>
+        <xs:attribute name="price" type="Money"/>
+        <xs:attribute name="currency" type="xs:string" fixed="EUR"/>
     </xs:complexType>
 
     <xs:complexType name="Book">
