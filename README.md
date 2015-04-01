@@ -182,3 +182,19 @@ A sample for using this plugin with Maven can be found on the source code (see t
           </plugins>
     </build>
 ```
+
+# Fixed values for attributes
+
+The xjc compiler is completely capable of generating classes with pre-populated fields if in this case the field map to an attribute. In this case, the only thing needed is a in place or a global binding with the directive, for example:
+
+```xml
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+               jaxb:version="2.0">
+  <jaxb:bindings schemaLocation="sample.xsd">
+    <jaxb:globalBindings fixedAttributeAsConstantProperty="true" />
+  </jaxb:bindings>
+</jaxb:bindings>
+```
+
+I added a small sample in the integration tests, take a look in the src/it/fixedvalue-it/src/main/resources/binding.xjb, and the generated Product.java.
